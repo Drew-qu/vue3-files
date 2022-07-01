@@ -1,24 +1,31 @@
 <script setup>
-import useTodoStore from '../store/todos';
+// import { watch } from 'vue';
+import useStore from '../store';
+const {todoList} = useStore()
 
-const todos = useTodoStore()
+// watch(()=> todoList.list, (value)=> {
+//   // console.log(111);
+//   localStorage.setItem('todo', JSON.stringify(value))
+// },{
+//   deep: true
+// }
+// )
 
-todos.$subscribe(()=>{
-  // console.log('todos改变了');
-  localStorage.setItem('todoList', JSON.stringify(todos.list))
+todoList.$subscribe(() => {
+  localStorage.setItem('todo',JSON.stringify(todoList.list))
 })
 </script>
 
 <template>
   <section class="main">
-    <input @change="todos.isCheckAll(!todos.checkAll)" id="toggle-all" class="toggle-all" type="checkbox" :checked='todos.checkAll'/>
+    <input @change="todoList.changeAll(!todoList.checkAll)" id="toggle-all" class="toggle-all" type="checkbox" :checked='todoList.checkAll'/>
     <label for="toggle-all">Mark all as complete</label>
     <ul class="todo-list">
-      <li :class="{completed:item.isDone}" v-for="item in todos.showList" :key="item.id">
+      <li :class="{completed: item.isDone}" v-for="item in todoList.filterTodo" :key="item.id">
         <div class="view">
-          <input class="toggle" type="checkbox" :checked="item.isDone" @click="todos.changeDone(item.id)"/>
+          <input class="toggle" type="checkbox" :checked="item.isDone" @change="todoList.checkDone(item.id)" />
           <label>{{item.name}}</label>
-          <button @click="todos.hDel(item.id)" class="destroy"></button>
+          <button @click="todoList.hDel(item.id)" class="destroy"></button>
         </div>
         <input class="edit" value="Create a TodoMVC template" />
       </li>

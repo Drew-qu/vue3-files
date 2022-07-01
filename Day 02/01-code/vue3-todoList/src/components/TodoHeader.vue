@@ -1,21 +1,22 @@
 <script setup>
 import { ref } from 'vue';
-import useTodoStore from '../store/todos';
+import useStore from '../store';
 
-const todos = useTodoStore()
-const todoName = ref('')
+const {todoList} = useStore()
 
-const hKeydown = () => {
-  if(todoName.value.length === 0) return
-  todos.hAdd(todoName.value)
-  todoName.value = ''
+const taskName = ref('')
+
+const hAdd = () => {
+  if(taskName.value.length === 0) return
+  todoList.hAdd(taskName.value)
+  taskName.value = ''
 }
 </script>
 
 <template>
   <header class="header">
     <h1>todos</h1>
-    <input v-model.trim="todoName" @keydown.enter="hKeydown" class="new-todo" placeholder="What needs to be done?" autofocus />
+    <input v-model.trim="taskName" @keydown.enter="hAdd" class="new-todo" placeholder="What needs to be done?" autofocus />
   </header>
 </template>
 
